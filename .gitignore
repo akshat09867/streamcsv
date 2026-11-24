@@ -1,0 +1,17 @@
+build/
+build-*/
+cmake-build-*/
+out/
+
+.cache/
+compile_commands.json
+.vscode/
+.idea/
+
+*.o
+*.a
+*.so
+*.out
+
+*.csv
+!tests/data/*.csv

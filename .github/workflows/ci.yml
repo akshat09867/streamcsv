@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure (Debug + Sanitizers)
+        run: cmake -B build-debug -DCMAKE_BUILD_TYPE=Debug -DENABLE_SANITIZERS=ON
+
+      - name: Build (Debug + Sanitizers)
+        run: cmake --build build-debug -j
+
+      - name: Smoke Test (Debug + Sanitizers)
+        run: |
+          printf "id,val\n1,10.5\n2,20.3\n" > sample.csv
+          touch empty.csv
+          ./build-debug/streamcsv sample.csv
+          ./build-debug/streamcsv empty.csv
+          ! ./build-debug/streamcsv does_not_exist.csv
+
+      - name: Configure & Build (Release)
+        run: |
+          cmake -B build-release -DCMAKE_BUILD_TYPE=Release -DENABLE_SANITIZERS=OFF
+          cmake --build build-release -j
+          ./build-release/streamcsv sample.csv
