@@ -10,6 +10,7 @@ option(ENABLE_SANITIZERS "Enable ASan and UBSan" OFF)
 
 add_library(streamcsv_core
     src/mapped_file.cpp
+    src/csv_parser.cpp
 )
 
 target_include_directories(streamcsv_core PUBLIC
